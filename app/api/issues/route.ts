@@ -3,15 +3,21 @@ import { z } from "zod";
 import prisma from "../../../prisma/client";
 
 const issueSchema = z.object({
-  title: z.string().min(3).max(50),
-  description: z.string().min(3).max(255),
+  title: z
+    .string()
+    .min(3, "Title must be at least 3 characters long")
+    .max(50, "Title must be at most 50 characters long"),
+  description: z
+    .string()
+    .min(3, "Description must be at least 3 characters long")
+    .max(255, "Description must be at most 255 characters long"),
 });
 export const POST = async (request: NextRequest) => {
   const body = await request.json();
   const validation = issueSchema.safeParse(body);
   if (!validation.success) {
     return NextResponse.json(
-      { error: validation.error.message },
+      { error: validation.error.format() },
       { status: 400 }
     );
   } else {

@@ -10,6 +10,7 @@ interface IFormInput {
 export const useIssueForm = () => {
   const router = useRouter();
   const [value, setValue] = useState("Enter the description here!");
+  const [beError, setBeError] = useState<string | null>(null);
   const onChange = useCallback((value: string) => {
     setValue(value);
   }, []);
@@ -25,15 +26,22 @@ export const useIssueForm = () => {
   });
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    axios
-      .post("/api/issues", data)
-      .then(() => {
-        setValue("Enter the description here!");
-        router.push("/issues");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    try {
+      axios
+        .post("/api/issues", data)
+        .then((response) => {
+          if (response.status === 201) {
+            setValue("Enter the description here!");
+            setBeError(null);
+            router.push("/issues");
+          }
+        })
+        .catch((error) => {
+          setBeError(error.response.data.error.title._errors[0]);
+        });
+    } catch (error) {
+      setBeError("Something went wrong");
+    }
   };
 
   return {
@@ -46,5 +54,6 @@ export const useIssueForm = () => {
     errors,
     isSubmitting,
     isValid,
+    beError,
   };
 };
