@@ -1,10 +1,11 @@
 import React from "react";
-import { Button } from "@radix-ui/themes";
+import "easymde/dist/easymde.min.css";
+import IssueForm from "../components/issue-form";
 
 const NewIssue = () => {
   return (
     <div>
-      <Button variant="solid">New Issue</Button>
+      <IssueForm />
     </div>
   );
 };
