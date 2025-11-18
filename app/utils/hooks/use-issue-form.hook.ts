@@ -2,23 +2,27 @@ import { useCallback, useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { yupResolver } from "@hookform/resolvers/yup";
+import formSchema from "@/app/utils/validations";
+import { IFormInput } from "../types";
 
-interface IFormInput {
-  title: string;
-  description: string;
-}
 export const useIssueForm = () => {
   const router = useRouter();
   const [value, setValue] = useState("Enter the description here!");
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [beError, setBeError] = useState<string | null>(null);
   const onChange = useCallback((value: string) => {
     setValue(value);
   }, []);
+
   const {
     control,
     handleSubmit,
-    formState: { errors, isSubmitting, isValid },
+    formState: { errors, isValid },
   } = useForm<IFormInput>({
+    resolver: yupResolver(formSchema),
+    mode: "onChange",
+    reValidateMode: "onChange",
     defaultValues: {
       title: "",
       description: "",
@@ -27,6 +31,7 @@ export const useIssueForm = () => {
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     try {
+      setIsSubmitting(true);
       axios
         .post("/api/issues", data)
         .then((response) => {
@@ -41,6 +46,7 @@ export const useIssueForm = () => {
         });
     } catch (error) {
       setBeError("Something went wrong");
+      setIsSubmitting(false);
     }
   };
 

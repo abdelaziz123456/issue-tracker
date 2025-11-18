@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
-import { Button, Callout, TextField } from "@radix-ui/themes";
+import { Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import { SimpleMdeReact } from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import { Controller } from "react-hook-form";
-import { useIssueForm } from "../../utils/hooks";
+import { useIssueForm } from "@/app/utils";
+import { ErrorMesssage } from "../atoms";
 const IssueForm = () => {
   const {
     control,
@@ -37,7 +38,11 @@ const IssueForm = () => {
           },
         }}
         render={({ field }) => (
-          <TextField.Root placeholder="Title " {...field} />
+          <div className="gap-0">
+            <TextField.Root placeholder="Title " {...field} />
+
+            <ErrorMesssage error={errors?.title?.message || ""} />
+          </div>
         )}
       />
 
@@ -51,7 +56,12 @@ const IssueForm = () => {
             message: "Description must be at least 3 characters long",
           },
         }}
-        render={({ field }) => <SimpleMdeReact {...field} />}
+        render={({ field }) => (
+          <div className="mt-2 gap-0">
+            <SimpleMdeReact {...field} className="mb-0 pb-0" />
+            <ErrorMesssage error={errors.description?.message || ""} />
+          </div>
+        )}
       />
 
       <Button
@@ -60,7 +70,7 @@ const IssueForm = () => {
         onClick={handleSubmit(onSubmit)}
         disabled={!isValid || isSubmitting}
       >
-        Submit New Issue
+        {isSubmitting ? <Spinner size="3" /> : "Submit New Issue"}
       </Button>
     </form>
   );

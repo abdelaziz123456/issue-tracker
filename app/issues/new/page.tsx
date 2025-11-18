@@ -1,6 +1,6 @@
 import React from "react";
 import "easymde/dist/easymde.min.css";
-import IssueForm from "../components/issue-form";
+import IssueForm from "../../components/organisms/issue-form";
 
 const NewIssue = () => {
   return (

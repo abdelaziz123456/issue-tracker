@@ -1,2 +1,3 @@
-import Navbar from "./navbar";
-export { Navbar };
+export * from "./atoms";
+export * from "./molecules";
+export * from "./organisms";

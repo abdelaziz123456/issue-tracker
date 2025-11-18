@@ -5,3 +5,8 @@ export interface Issue {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface IFormInput {
+  title: string;
+  description: string;
+}
