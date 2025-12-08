@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { useIssuesPage } from "../utils/hooks";
-import { Badge, Skeleton, Spinner, Table } from "@radix-ui/themes";
+import { Badge, Link, Spinner, Table } from "@radix-ui/themes";
+import { mappedIssues } from "../utils";
 
 const Issues = () => {
-  const { issues, mappedIssues, isLoading } = useIssuesPage();
+  const { issues, isLoading } = useIssuesPage();
 
   return isLoading ? (
     <div className="flex items-center min-h-[30vh] justify-center ">
@@ -26,8 +27,13 @@ const Issues = () => {
           </Table.Header>
           <Table.Body>
             {issues?.map((issue) => (
-              <Table.Row key={issue.id}>
-                <Table.Cell>{issue.title}</Table.Cell>
+              <Table.Row
+                key={issue.id}
+                className="cursor-pointer hover:bg-blue-50"
+              >
+                <Table.Cell>
+                  <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
+                </Table.Cell>
                 <Table.Cell className="hidden md:block">
                   {issue.description}
                 </Table.Cell>

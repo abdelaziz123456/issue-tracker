@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import axios, { AxiosResponse } from "axios";
-import { Issue, IssueStatusEnum } from "@/app/utils/types";
+import { Issue } from "@/app/utils/types";
+import { useRouter } from "next/navigation";
 
 export const useIssuesPage = () => {
   const [issues, setIssues] = useState<Issue[] | null>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const router = useRouter();
   const fetchIssues = async () => {
     setIsLoading(true);
     const response: AxiosResponse<Issue[]> = await axios.get("/api/issues");
@@ -14,28 +15,14 @@ export const useIssuesPage = () => {
     setIsLoading(false);
   };
 
-  const mappedIssues = {
-    [IssueStatusEnum.TODO]: {
-      color: "orange",
-      text: "To Do",
-    },
-    [IssueStatusEnum.IN_PROGRESS]: {
-      color: "blue",
-      text: "In Progress",
-    },
-    [IssueStatusEnum.DONE]: {
-      color: "green",
-      text: "Done",
-    },
-  };
-
   useEffect(() => {
     fetchIssues();
   }, []);
 
   return {
     issues,
-    mappedIssues,
+
     isLoading,
+    router,
   };
 };
