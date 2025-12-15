@@ -1,4 +1,4 @@
 import NavItem from "./navlink.atom";
 import ErrorMesssage from "./errorMessage.atom";
-
-export { NavItem, ErrorMesssage };
+import Skeleton from "./skeleton.atom";
+export { NavItem, ErrorMesssage, Skeleton };
