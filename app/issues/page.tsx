@@ -1,15 +1,9 @@
 "use client";
 import React from "react";
 import { useIssuesPage } from "../utils/hooks";
-<<<<<<< HEAD
-import { Badge, Link, Spinner, Table } from "@radix-ui/themes";
-import { mappedIssues } from "../utils";
-
-=======
 import { Badge, Link, Table } from "@radix-ui/themes";
 import { mappedIssues } from "../utils";
 import { Skeleton } from "@components";
->>>>>>> 266d215 (finish viewing issies implementation)
 const Issues = () => {
   const { issues, isLoading } = useIssuesPage();
 
@@ -33,32 +27,6 @@ const Issues = () => {
               </Table.ColumnHeaderCell>
             </Table.Row>
           </Table.Header>
-<<<<<<< HEAD
-          <Table.Body>
-            {issues?.map((issue) => (
-              <Table.Row
-                key={issue.id}
-                className="cursor-pointer hover:bg-blue-50"
-              >
-                <Table.Cell>
-                  <Link href={`/issues/${issue.id}`}>{issue.title}</Link>
-                </Table.Cell>
-                <Table.Cell className="hidden md:block">
-                  {issue.description}
-                </Table.Cell>
-                <Table.Cell>
-                  <Badge color={mappedIssues[issue.status].color as any}>
-                    {mappedIssues[issue.status].text}
-                  </Badge>
-                </Table.Cell>
-                <Table.Cell>
-                  {issue.createdAt
-                    ? new Date(issue.createdAt).toLocaleDateString()
-                    : "N/A"}
-                </Table.Cell>
-              </Table.Row>
-            ))}
-=======
           <Table.Body className="w-full ">
             {isLoading
               ? Array.from({ length: 8 }).map((_, i) => (
@@ -103,7 +71,6 @@ const Issues = () => {
                     </Table.Cell>
                   </Table.Row>
                 ))}
->>>>>>> 266d215 (finish viewing issies implementation)
           </Table.Body>
         </Table.Root>
       </div>
