@@ -6,7 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import formSchema from "@/app/utils/validations";
 import { IFormInput } from "../types";
 
-export const useIssueForm = () => {
+export const useIssueForm = (title?: string, description?: string) => {
   const router = useRouter();
   const [value, setValue] = useState("Enter the description here!");
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -21,11 +21,11 @@ export const useIssueForm = () => {
     formState: { errors, isValid },
   } = useForm<IFormInput>({
     resolver: yupResolver(formSchema),
-    mode: "onChange",
+    mode: "onSubmit",
     reValidateMode: "onChange",
     defaultValues: {
-      title: "",
-      description: "",
+      title: title,
+      description: description,
     },
   });
 

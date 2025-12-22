@@ -4,8 +4,13 @@ import { Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import { Controller } from "react-hook-form";
 import { useIssueForm } from "@/app/utils";
 import { ErrorMesssage } from "../atoms";
-import dynamic from "next/dynamic";
-const IssueForm = () => {
+import MDEditor from "@uiw/react-md-editor";
+
+const IssueForm = ({
+  initialValues,
+}: {
+  initialValues?: { title: string; description: string };
+}) => {
   const {
     control,
     handleSubmit,
@@ -14,10 +19,8 @@ const IssueForm = () => {
     isSubmitting,
     isValid,
     beError,
-  } = useIssueForm();
-  const ClientSimpleMdeReact = dynamic(() => import("react-simplemde-editor"), {
-    ssr: false,
-  });
+  } = useIssueForm(initialValues?.title, initialValues?.description);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
@@ -31,6 +34,7 @@ const IssueForm = () => {
       <Controller
         name="title"
         control={control}
+        defaultValue={initialValues?.title}
         rules={{
           required: true,
           minLength: {
@@ -59,7 +63,17 @@ const IssueForm = () => {
         }}
         render={({ field }) => (
           <div className="mt-2 gap-0">
-            <ClientSimpleMdeReact {...field} className="mb-0 pb-0" />
+            <MDEditor
+              {...field}
+              className="mb-0 pb-0"
+              textareaProps={{
+                style: {
+                  background: "transparent",
+                },
+              }}
+              preview="edit"
+              style={{ background: "transparent", color: "inherit" }}
+            />
             <ErrorMesssage error={errors.description?.message || ""} />
           </div>
         )}
