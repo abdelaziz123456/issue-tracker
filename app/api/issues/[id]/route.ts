@@ -6,9 +6,9 @@ export const GET = async (
   req: NextRequest,
   { params }: { params: { id: string } }
 ) => {
-  const id = parseInt(params.id);
+  const id = await parseInt(params.id);
   const issue = await prisma.issue.findUnique({
-    where: { id: parseInt(params.id) },
+    where: { id: parseInt(params?.id) },
   });
 
   if (!issue) {
