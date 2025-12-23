@@ -19,7 +19,7 @@ const Loading = () => {
           <Skeleton width={80} />
         </div>
         <div className="border  md:w-[70vw] px-2 py-4 rounded-xl">
-          <Skeleton width={"full"} />
+          <Skeleton className="min-w-[250px]" />
         </div>
       </div>
     </div>

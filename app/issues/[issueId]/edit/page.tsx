@@ -1,25 +1,21 @@
 "use client";
 import { useIssueDetails } from "@/app/utils";
-import { IssueForm } from "@components";
+import { FormSkeleton, Skeleton } from "@components";
+import dynamic from "next/dynamic";
 import React, { use } from "react";
 
 const EditPage = ({ params }: { params: Promise<{ issueId: string }> }) => {
   const resolvedparams = use(params);
   const { issueId } = resolvedparams;
-  const { issueDetails, error, router } = useIssueDetails(issueId);
-
-  return (
-    <div>
-      {issueDetails && (
-        <IssueForm
-          initialValues={{
-            title: issueDetails?.title,
-            description: issueDetails?.description,
-          }}
-        />
-      )}
-    </div>
+  const { issueDetails } = useIssueDetails(issueId);
+  const IssueForm = dynamic(
+    () => import("@components").then((mod) => mod.IssueForm),
+    {
+      ssr: false,
+      loading: () => <FormSkeleton />,
+    }
   );
+  return <div>{issueDetails && <IssueForm issue={issueDetails} />}</div>;
 };
 
 export default EditPage;

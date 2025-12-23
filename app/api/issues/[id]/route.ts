@@ -1,5 +1,6 @@
 import prisma from "@/prisma/client";
 import { NextRequest, NextResponse } from "next/server";
+import { issueSchema } from "../../validationSchemas";
 
 export const GET = async (
   req: NextRequest,
@@ -15,4 +16,31 @@ export const GET = async (
   }
 
   return NextResponse.json(issue, { status: 200 });
+};
+
+export const PUT = async (
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  const id = parseInt(params.id);
+  const body = await request.json();
+  const validation = issueSchema.safeParse(body);
+  if (!validation.success) {
+    return NextResponse.json(
+      { error: validation.error.format() },
+      { status: 400 }
+    );
+  } else {
+    const { title, description } = validation.data;
+    const issue = await prisma.issue.update({
+      where: {
+        id,
+      },
+      data: {
+        title,
+        description,
+      },
+    });
+    return NextResponse.json(issue, { status: 200 });
+  }
 };

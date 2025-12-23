@@ -4,10 +4,11 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { yupResolver } from "@hookform/resolvers/yup";
 import formSchema from "@/app/utils/validations";
-import { IFormInput } from "../types";
+import { IFormInput, Issue } from "../types";
 
-export const useIssueForm = (title?: string, description?: string) => {
+export const useIssueForm = (issue?: Issue) => {
   const router = useRouter();
+
   const [value, setValue] = useState("Enter the description here!");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [beError, setBeError] = useState<string | null>(null);
@@ -24,8 +25,8 @@ export const useIssueForm = (title?: string, description?: string) => {
     mode: "onSubmit",
     reValidateMode: "onChange",
     defaultValues: {
-      title: title,
-      description: description,
+      title: issue?.title,
+      description: issue?.description,
     },
   });
 
@@ -39,6 +40,27 @@ export const useIssueForm = (title?: string, description?: string) => {
             setValue("Enter the description here!");
             setBeError(null);
             router.push("/issues");
+            router.refresh();
+          }
+        })
+        .catch((error) => {
+          setBeError(error.response.data.error.title._errors[0]);
+        });
+    } catch (error) {
+      setBeError("Something went wrong");
+      setIsSubmitting(false);
+    }
+  };
+
+  const onUpdate: SubmitHandler<IFormInput> = (data) => {
+    try {
+      setIsSubmitting(true);
+      axios
+        .put(`/api/issues/${issue?.id}`, data)
+        .then((response) => {
+          if (response.status === 200) {
+            router.push("/issues");
+            router.refresh();
           }
         })
         .catch((error) => {
@@ -61,5 +83,6 @@ export const useIssueForm = (title?: string, description?: string) => {
     isSubmitting,
     isValid,
     beError,
+    onUpdate,
   };
 };

@@ -1,3 +1,3 @@
 import IssueForm from "./issue-form";
-
-export { IssueForm };
+import FormSkeleton from "./form-skeleton";
+export { IssueForm, FormSkeleton };

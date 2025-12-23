@@ -1,16 +1,15 @@
 "use client";
-import React from "react";
+import React, { use } from "react";
 import { Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import { Controller } from "react-hook-form";
 import { useIssueForm } from "@/app/utils";
 import { ErrorMesssage } from "../atoms";
 import MDEditor from "@uiw/react-md-editor";
+import { usePathname, useRouter } from "next/navigation";
 
-const IssueForm = ({
-  initialValues,
-}: {
-  initialValues?: { title: string; description: string };
-}) => {
+import { Issue } from "@/app/utils/types";
+
+const IssueForm = ({ issue }: { issue?: Issue }) => {
   const {
     control,
     handleSubmit,
@@ -19,12 +18,15 @@ const IssueForm = ({
     isSubmitting,
     isValid,
     beError,
-  } = useIssueForm(initialValues?.title, initialValues?.description);
-
+    onUpdate,
+  } = useIssueForm(issue);
+  const path = usePathname();
+  const isEditMode = path.includes("edit");
+  console.log("object", issue);
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className=" flex flex-col gap-3 my-6 mx-4"
+      className=" flex flex-col gap-7 my-6 mx-4"
     >
       {beError && (
         <Callout.Root color="red">
@@ -34,7 +36,6 @@ const IssueForm = ({
       <Controller
         name="title"
         control={control}
-        defaultValue={initialValues?.title}
         rules={{
           required: true,
           minLength: {
@@ -78,15 +79,25 @@ const IssueForm = ({
           </div>
         )}
       />
-
-      <Button
-        variant="solid"
-        className="max-w-[200px]"
-        onClick={handleSubmit(onSubmit)}
-        disabled={!isValid || isSubmitting}
-      >
-        {isSubmitting ? <Spinner size="3" /> : "Submit New Issue"}
-      </Button>
+      {isEditMode ? (
+        <Button
+          variant="solid"
+          className="max-w-[200px]"
+          onClick={handleSubmit(onUpdate)}
+          disabled={!isValid || isSubmitting}
+        >
+          {isSubmitting ? <Spinner size="3" /> : "Update Issue"}
+        </Button>
+      ) : (
+        <Button
+          variant="solid"
+          className="max-w-[200px]"
+          onClick={handleSubmit(onSubmit)}
+          disabled={!isValid || isSubmitting}
+        >
+          {isSubmitting ? <Spinner size="3" /> : "Submit New Issue"}
+        </Button>
+      )}
     </form>
   );
 };

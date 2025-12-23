@@ -3,7 +3,6 @@ import { mappedIssues, useIssueDetails } from "@/app/utils";
 import { Badge, Button, Text } from "@radix-ui/themes";
 import React, { use } from "react";
 import MarkdownPreview from "@uiw/react-markdown-preview";
-import { Skeleton } from "@components";
 import { Pencil2Icon } from "@radix-ui/react-icons";
 import Loading from "./loading";
 
