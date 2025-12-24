@@ -1,11 +1,11 @@
 "use client";
-import React, { use } from "react";
+import React from "react";
 import { Button, Callout, Spinner, TextField } from "@radix-ui/themes";
 import { Controller } from "react-hook-form";
 import { useIssueForm } from "@/app/utils";
 import { ErrorMesssage } from "../atoms";
 import MDEditor from "@uiw/react-md-editor";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 import { Issue } from "@/app/utils/types";
 
@@ -22,7 +22,7 @@ const IssueForm = ({ issue }: { issue?: Issue }) => {
   } = useIssueForm(issue);
   const path = usePathname();
   const isEditMode = path.includes("edit");
-  console.log("object", issue);
+
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}

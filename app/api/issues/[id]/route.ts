@@ -44,3 +44,19 @@ export const PUT = async (
     return NextResponse.json(issue, { status: 200 });
   }
 };
+
+export const DELETE = async (
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  const id = await parseInt(params.id);
+  const issue = await prisma.issue.delete({
+    where: {
+      id,
+    },
+  });
+  return NextResponse.json(issue, {
+    status: 200,
+    headers: { message: "Issue deleted successfully" },
+  });
+};

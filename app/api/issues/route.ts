@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
 import prisma from "../../../prisma/client";
 import { issueSchema } from "../validationSchemas";
 
@@ -26,16 +25,4 @@ export const POST = async (request: NextRequest) => {
 export const GET = async () => {
   const issues = await prisma.issue.findMany();
   return NextResponse.json(issues, { status: 200 });
-};
-
-export const DELETE = async (id: number) => {
-  const issue = await prisma.issue.delete({
-    where: {
-      id,
-    },
-  });
-  return NextResponse.json(issue, {
-    status: 200,
-    headers: { message: "Issue deleted successfully" },
-  });
 };

@@ -1,16 +1,25 @@
 "use client";
 import { mappedIssues, useIssueDetails } from "@/app/utils";
-import { AlertDialog, Badge, Button, Text } from "@radix-ui/themes";
-import React, { use, useState } from "react";
+import { Badge, Button, Text } from "@radix-ui/themes";
+import React from "react";
 import MarkdownPreview from "@uiw/react-markdown-preview";
-import { Pencil2Icon, EraserIcon } from "@radix-ui/react-icons";
+import { Pencil2Icon } from "@radix-ui/react-icons";
 import Loading from "./loading";
+import { Modal } from "@/app/components";
 
-const IssueDetails = ({ params }: { params: Promise<{ issueId: string }> }) => {
-  const resolvedparams = use(params);
-  const { issueId } = resolvedparams;
-  const { issueDetails, error, router } = useIssueDetails(issueId);
-  const [open, setOpen] = useState(false);
+const IssueDetails = () => {
+  const {
+    issueDetails,
+    error,
+    router,
+    open,
+    setOpen,
+    goToIssueEdit,
+    deleteIssueHandler,
+    deletionError,
+    setDeletionError,
+    deletionLoading,
+  } = useIssueDetails();
 
   if (error) {
     return (
@@ -67,10 +76,7 @@ const IssueDetails = ({ params }: { params: Promise<{ issueId: string }> }) => {
       </div>
       <div className="col-span-4 sm:col-span-1 px-2">
         <div className="flex flex-col gap-2 ">
-          <Button
-            variant="solid"
-            onClick={() => router.push(`/issues/${issueId}/edit`)}
-          >
+          <Button variant="solid" onClick={goToIssueEdit}>
             Edit Issue <Pencil2Icon className="ml-2" />
           </Button>
           <Button variant="solid" color="red" onClick={() => setOpen(true)}>
@@ -80,33 +86,35 @@ const IssueDetails = ({ params }: { params: Promise<{ issueId: string }> }) => {
       </div>
 
       {/* confirm modal  */}
-
-      <AlertDialog.Root open={open} onOpenChange={setOpen}>
-        <AlertDialog.Content className="flex flex-col gap-4">
-          <AlertDialog.Title>Confirm Delete</AlertDialog.Title>
-          <AlertDialog.Description className=" flex flex-col gap-4">
-            are you saure you want to delete this issue ? This action cannot be
-            undone.
-            <div className="mt-4 flex gap-2 justify-start">
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setOpen(false);
-                }}
-              >
-                Cancel
-              </Button>
-              <Button
-                variant="solid"
-                color="red"
-                onClick={() => console.log("deleted")}
-              >
-                Confirm
-              </Button>
-            </div>
-          </AlertDialog.Description>
-        </AlertDialog.Content>
-      </AlertDialog.Root>
+      <Modal
+        open={open}
+        setOpen={setOpen}
+        title={!deletionError ? "Confirm Delete" : "Deletion Error"}
+        desc={
+          !deletionError
+            ? "are you sure you want to delete this issue ? This action cannot be undone"
+            : `this issue could not be deleted : ${deletionError}`
+        }
+        footerButtons={[
+          <Button
+            variant="outline"
+            onClick={() => {
+              setOpen(false);
+              setDeletionError(null);
+            }}
+          >
+            Cancel
+          </Button>,
+          <Button
+            variant="solid"
+            color="red"
+            onClick={deleteIssueHandler}
+            loading={deletionLoading}
+          >
+            {!deletionError ? "Confirm" : "Retry"}
+          </Button>,
+        ]}
+      />
     </div>
   );
 };
