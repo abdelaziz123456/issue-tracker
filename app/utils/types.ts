@@ -16,3 +16,10 @@ export interface IFormInput {
   title: string;
   description: string;
 }
+
+export enum RoutesEnum {
+  HOME = "/",
+  ISSUES = "/issues",
+  NEW_ISSUE = "/issues/new",
+  LOGIN = "/login",
+}
